@@ -22,8 +22,15 @@ exports.registerUser = async (req, res) => {
         }
 
         const existingUser = await User.findOne({ email });
-        if(existingUser){
-            return res.status(400).json({ message: 'Email already in use'});
+
+        if (existingUser && existingUser.isVerified) {
+            return res.status(400).json({
+                message: "Email already in use"
+            });
+        }
+
+        if (existingUser && !existingUser.isVerified) {
+            await User.deleteOne({ email });
         }
 
         const otp = Math.floor(10000 + Math.random() * 900000).toString();
@@ -31,7 +38,13 @@ exports.registerUser = async (req, res) => {
 
 
         const user = await User.create({ username, email, password, otp, otpExpiry})
-        res.status(201).json({message: 'User registered successfully',user})
+        res.status(201).json({
+            message: "User registered successfully",
+            user: {
+                _id: user._id,
+                email: user.email
+            }
+        });
 
         //OTP SENDING LOGIC:
         try {
@@ -62,7 +75,7 @@ exports.verifyOTP = async (req, res) => {
         if(!user){
             return res.status(400).json({ message: 'User not found'});
         }
-        if(!user.isVerified){
+        if(user.isVerified){
             return res.status(400).json({ message: 'User already verified '});
         }
         if(user.otp !== otp){
@@ -91,7 +104,7 @@ exports.loginUser = async (req, res) => {
         if(!user){
             return res.status(400).json({ message: 'User not found'});
         }
-        if(user.isVerified){
+        if(!user.isVerified){
             return res.status(400).json({ message: 'User not verified. Please verify email first. '});
         }
         

@@ -1,0 +1,30 @@
+{
+  "name": "ai-cold-mail-generator-mono",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/devv1002/AUTOMATED-COLD-EMAILING-SYSTEM#readme",
+  "bugs": {
+    "url": "https://github.com/devv1002/AUTOMATED-COLD-EMAILING-SYSTEM/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devv1002/AUTOMATED-COLD-EMAILING-SYSTEM.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "install-all": "npm install && npm install --prefix server && npm install --prefix client",
+    "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
+    "start:server": "npm --prefix server run start",
+    "start:client": "npm --prefix client run dev",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev"
+  },
+  "dependencies": {
+    "concurrency": "^0.1.4",
+    "concurrently": "^9.2.1"
+  }
+}
